@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <h1>Profiles</h1>
+
+    <div id="profile-list"></div>
+
+    <script type="module">
+        import { supabase } from "../supabaseClient.js";
+
+        async function loadProfiles() {
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*");
+
+            if (error) {
+                console.error("Error loading profiles:", error);
+                return;
+            }
+
+            const container = document.getElementById("profile-list");
+
+            container.innerHTML = data.map(p => `
+                <div class="book-card">
+                    <p><b>Name:</b> ${p.name}</p>
+                    <p><b>Email:</b> ${p.email}</p>
+                    <p><b>User ID:</b> ${p.user_id}</p>
+                </div>
+            `).join("");
+        }
+
+        loadProfiles();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <h1>Orders</h1>
+
+    <div id="orders-list"></div>
+
+    <script type="module">
+        import { supabase } from "../supabaseClient.js";
+
+        async function loadOrders() {
+            const { data, error } = await supabase
+                .from("orders")
+                .select("*");
+
+            if (error) {
+                console.error("Error loading orders:", error);
+                return;
+            }
+
+            const container = document.getElementById("orders-list");
+
+            container.innerHTML = data.map(order => `
+                <div class="book-card">
+                    <p><b>User ID:</b> ${order.user_id}</p>
+                    <p><b>Total:</b> ₹${order.total}</p>
+                    <p><b>Items:</b> ${order.items}</p>
+                    <p><b>Placed on:</b> ${order.created_at}</p>
+                </div>
+            `).join("");
+        }
+
+        loadOrders();
+    </script>
+
+</body>
+</html>

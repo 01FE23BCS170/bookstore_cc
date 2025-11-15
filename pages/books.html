@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+
+    <!-- Correct path: go back one folder -->
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <h1>Books</h1>
+
+    <div id="book-list"></div>
+
+    <script type="module">
+        import { supabase } from "../supabaseClient.js";
+
+        async function loadBooks() {
+            const { data, error } = await supabase.from("books").select("*");
+
+            if (error) {
+                console.error("Error loading books:", error);
+                return;
+            }
+
+            const container = document.getElementById("book-list");
+
+            container.innerHTML = data.map(book => `
+                <div class="book-card">
+                    <img src="${book.image}" width="120" />
+                    <h3>${book.title}</h3>
+                    <p>${book.author}</p>
+                    <p>₹${book.price}</p>
+                </div>
+            `).join("");
+        }
+
+        loadBooks();
+    </script>
+
+</body>
+</html>
